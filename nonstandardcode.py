@@ -9,7 +9,10 @@ from six.moves import urllib
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.metrics import (
+    mean_absolute_error,
+    mean_squared_error,
+)
 from sklearn.model_selection import (
     GridSearchCV,
     StratifiedShuffleSplit,
@@ -21,10 +24,14 @@ from sklearn.tree import DecisionTreeRegressor
 for storing it """
 DOWNLOAD_ROOT = "https://raw.githubusercontent.com/ageron/handson-ml/master/"
 HOUSING_PATH = os.path.join("datasets", "housing")
-HOUSING_URL = DOWNLOAD_ROOT + "datasets/housing/housing.tgz"
+HOUSING_URL = (
+    DOWNLOAD_ROOT + "datasets/housing/housing.tgz"
+)
 
 
-def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
+def fetch_housing_data(
+    housing_url=HOUSING_URL, housing_path=HOUSING_PATH
+):
     """
     Fetch the housing data from the provided URL and extract it
     to the specified path.
@@ -39,11 +46,21 @@ def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
     Returns:
     None
     """
-    os.makedirs(housing_path, exist_ok=True)  # Create the directory if it doesn't exist
-    tgz_path = os.path.join(housing_path, "housing.tgz")  # Path for the .tgz file
-    urllib.request.urlretrieve(housing_url, tgz_path)  # Download the .tgz file
-    housing_tgz = tarfile.open(tgz_path)  # Open the .tgz file
-    housing_tgz.extractall(path=housing_path)  # Extract all contents of the file
+    os.makedirs(
+        housing_path, exist_ok=True
+    )  # Create the directory if it doesn't exist
+    tgz_path = os.path.join(
+        housing_path, "housing.tgz"
+    )  # Path for the .tgz file
+    urllib.request.urlretrieve(
+        housing_url, tgz_path
+    )  # Download the .tgz file
+    housing_tgz = tarfile.open(
+        tgz_path
+    )  # Open the .tgz file
+    housing_tgz.extractall(
+        path=housing_path
+    )  # Extract all contents of the file
     housing_tgz.close()  # Close the .tgz file
 
 
@@ -64,8 +81,12 @@ def load_housing_data(housing_path=HOUSING_PATH):
     loaded from the CSV file.
     """
 
-    csv_path = os.path.join(housing_path, "housing.csv")  # Path for the CSV file
-    return pd.read_csv(csv_path)  # Load the CSV data into a pandas DataFrame
+    csv_path = os.path.join(
+        housing_path, "housing.csv"
+    )  # Path for the CSV file
+    return pd.read_csv(
+        csv_path
+    )  # Load the CSV data into a pandas DataFrame
 
 
 # Load the housing data into a DataFrame
@@ -73,7 +94,9 @@ housing = load_housing_data()
 
 
 # Split the data into training and test sets
-train_set, test_set = train_test_split(housing, test_size=0.2, random_state=42)
+train_set, test_set = train_test_split(
+    housing, test_size=0.2, random_state=42
+)
 
 # Create income categories for stratified sampling
 housing["income_cat"] = pd.cut(
@@ -85,10 +108,18 @@ housing["income_cat"] = pd.cut(
 
 """StratifiedShuffleSplit for splitting the data while
  preserving income category proportions """
-split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-for train_index, test_index in split.split(housing, housing["income_cat"]):
-    strat_train_set = housing.loc[train_index]  # Training data after stratification
-    strat_test_set = housing.loc[test_index]  # Test data after stratification
+split = StratifiedShuffleSplit(
+    n_splits=1, test_size=0.2, random_state=42
+)
+for train_index, test_index in split.split(
+    housing, housing["income_cat"]
+):
+    strat_train_set = housing.loc[
+        train_index
+    ]  # Training data after stratification
+    strat_test_set = housing.loc[
+        test_index
+    ]  # Test data after stratification
 
 
 def income_cat_proportions(data):
@@ -110,24 +141,34 @@ def income_cat_proportions(data):
     income category,indexed by the category labels. The values represent
     the fraction of the total dataset that each category comprises.
     """
-    return data["income_cat"].value_counts() / len(data)
+    return data["income_cat"].value_counts() / len(
+        data
+    )
 
 
 # Compare stratified vs random sampling for income categories
 compare_props = pd.DataFrame(
     {
         "Overall": income_cat_proportions(housing),
-        "Stratified": income_cat_proportions(strat_test_set),
+        "Stratified": income_cat_proportions(
+            strat_test_set
+        ),
         "Random": income_cat_proportions(test_set),
     }
 ).sort_index()
 
 # Calculate the percentage error for random and stratified sampling
 compare_props["Rand. %error"] = (
-    100 * compare_props["Random"] / compare_props["Overall"] - 100
+    100
+    * compare_props["Random"]
+    / compare_props["Overall"]
+    - 100
 )
 compare_props["Strat. %error"] = (
-    100 * compare_props["Stratified"] / compare_props["Overall"] - 100
+    100
+    * compare_props["Stratified"]
+    / compare_props["Overall"]
+    - 100
 )
 
 # Remove the income category column from the training and test sets
@@ -138,7 +179,9 @@ for set_ in (strat_train_set, strat_test_set):
 housing = strat_train_set.copy()
 
 # Plot housing data on a scatter plot
-housing.plot(kind="scatter", x="longitude", y="latitude")
+housing.plot(
+    kind="scatter", x="longitude", y="latitude"
+)
 housing.plot(
     kind="scatter",
     x="longitude",
@@ -146,21 +189,31 @@ housing.plot(
     alpha=0.1,
 )  # Add transparency
 
-"""Compute the correlation matrix and look at correlations with
- 'median_house_value' """
+'''Compute the correlation matrix and look at correlations with
+ 'median_house_value' '''
 corr_matrix = housing.corr()
-corr_matrix["median_house_value"].sort_values(ascending=False)
+corr_matrix["median_house_value"].sort_values(
+    ascending=False
+)
 
 # Add new features to the dataset (feature engineering)
-housing["rooms_per_household"] = housing["total_rooms"] / housing["households"]
-housing["bedrooms_per_room"] = housing["total_bedrooms"] / housing["total_rooms"]
-housing["population_per_household"] = housing["population"] / housing["households"]
+housing["rooms_per_household"] = (
+    housing["total_rooms"] / housing["households"]
+)
+housing["bedrooms_per_room"] = (
+    housing["total_bedrooms"] / housing["total_rooms"]
+)
+housing["population_per_household"] = (
+    housing["population"] / housing["households"]
+)
 
 # Separate the target label from the training data
 housing = strat_train_set.drop(
     "median_house_value", axis=1
 )  # Drop labels for training set
-housing_labels = strat_train_set["median_house_value"].copy()  # Store labels separately
+housing_labels = strat_train_set[
+    "median_house_value"
+].copy()  # Store labels separately
 
 
 # Impute missing values with the median strategy
@@ -181,43 +234,64 @@ housing_tr = pd.DataFrame(
 )
 
 # Recompute feature-engineered columns for the transformed data
-housing_tr["rooms_per_household"] = housing_tr["total_rooms"] / housing_tr["households"]
+housing_tr["rooms_per_household"] = (
+    housing_tr["total_rooms"]
+    / housing_tr["households"]
+)
 housing_tr["bedrooms_per_room"] = (
-    housing_tr["total_bedrooms"] / housing_tr["total_rooms"]
+    housing_tr["total_bedrooms"]
+    / housing_tr["total_rooms"]
 )
 housing_tr["population_per_household"] = (
-    housing_tr["population"] / housing_tr["households"]
+    housing_tr["population"]
+    / housing_tr["households"]
 )
 
 # One-hot encode the categorical 'ocean_proximity' feature
 housing_cat = housing[["ocean_proximity"]]
-housing_prepared = housing_tr.join(pd.get_dummies(housing_cat, drop_first=True))
+housing_prepared = housing_tr.join(
+    pd.get_dummies(housing_cat, drop_first=True)
+)
 
 # Train a linear regression model
 
 lin_reg = LinearRegression()
-lin_reg.fit(housing_prepared, housing_labels)  # Fit the model
+lin_reg.fit(
+    housing_prepared, housing_labels
+)  # Fit the model
 
 # Make predictions and compute RMSE for linear regression
 
-housing_predictions = lin_reg.predict(housing_prepared)
-lin_mse = mean_squared_error(housing_labels, housing_predictions)
+housing_predictions = lin_reg.predict(
+    housing_prepared
+)
+lin_mse = mean_squared_error(
+    housing_labels, housing_predictions
+)
 lin_rmse = np.sqrt(lin_mse)
 lin_rmse
 
 # Compute MAE for linear regression
 
-lin_mae = mean_absolute_error(housing_labels, housing_predictions)
+lin_mae = mean_absolute_error(
+    housing_labels, housing_predictions
+)
 lin_mae
 
 # Train a decision tree regressor
 
 tree_reg = DecisionTreeRegressor(random_state=42)
-tree_reg.fit(housing_prepared, housing_labels)  # Fit the decision tree model
+tree_reg.fit(
+    housing_prepared, housing_labels
+)  # Fit the decision tree model
 
 # Make predictions and compute RMSE for decision tree
-housing_predictions = tree_reg.predict(housing_prepared)
-tree_mse = mean_squared_error(housing_labels, housing_predictions)
+housing_predictions = tree_reg.predict(
+    housing_prepared
+)
+tree_mse = mean_squared_error(
+    housing_labels, housing_predictions
+)
 tree_rmse = np.sqrt(tree_mse)
 tree_rmse
 
@@ -241,7 +315,9 @@ param_grid = config["param_grid"]
 grid_search_params = config["grid_search"]
 
 # Initialize the RandomForestRegressor with parameters from config
-forest_reg = RandomForestRegressor(random_state=random_state)
+forest_reg = RandomForestRegressor(
+    random_state=random_state
+)
 
 # Set up GridSearchCV with parameters from the config file
 grid_search = GridSearchCV(
@@ -249,12 +325,16 @@ grid_search = GridSearchCV(
     param_grid=param_grid,
     cv=grid_search_params["cv"],
     scoring=grid_search_params["scoring"],
-    return_train_score=grid_search_params["return_train_score"],
+    return_train_score=grid_search_params[
+        "return_train_score"
+    ],
 )
 
 # Print results from the randomized search
 cvres = grid_search.cv_results_
-for mean_score, params in zip(cvres["mean_test_score"], cvres["params"]):
+for mean_score, params in zip(
+    cvres["mean_test_score"], cvres["params"]
+):
     print(np.sqrt(-mean_score), params)
 
 # Set up grid search for hyperparameter tuning
@@ -289,13 +369,19 @@ grid_search.fit(housing_prepared, housing_labels)
 # Get the best parameters and display results from grid search
 grid_search.best_params_
 cvres = grid_search.cv_results_
-for mean_score, params in zip(cvres["mean_test_score"], cvres["params"]):
+for mean_score, params in zip(
+    cvres["mean_test_score"], cvres["params"]
+):
     print(np.sqrt(-mean_score), params)
 
 # Display feature importances from the best model
-feature_importances = grid_search.best_estimator_.feature_importances_
+feature_importances = (
+    grid_search.best_estimator_.feature_importances_
+)
 sorted(
-    zip(feature_importances, housing_prepared.columns),
+    zip(
+        feature_importances, housing_prepared.columns
+    ),
     reverse=True,
 )
 
@@ -303,7 +389,9 @@ sorted(
 final_model = grid_search.best_estimator_
 
 # Prepare the test set
-X_test = strat_test_set.drop("median_house_value", axis=1)
+X_test = strat_test_set.drop(
+    "median_house_value", axis=1
+)
 y_test = strat_test_set["median_house_value"].copy()
 
 # Process numerical and categorical test set features
@@ -315,20 +403,29 @@ X_test_prepared = pd.DataFrame(
     index=X_test.index,
 )
 X_test_prepared["rooms_per_household"] = (
-    X_test_prepared["total_rooms"] / X_test_prepared["households"]
+    X_test_prepared["total_rooms"]
+    / X_test_prepared["households"]
 )
 X_test_prepared["bedrooms_per_room"] = (
-    X_test_prepared["total_bedrooms"] / X_test_prepared["total_rooms"]
+    X_test_prepared["total_bedrooms"]
+    / X_test_prepared["total_rooms"]
 )
 X_test_prepared["population_per_household"] = (
-    X_test_prepared["population"] / X_test_prepared["households"]
+    X_test_prepared["population"]
+    / X_test_prepared["households"]
 )
 
 # One-hot encode categorical test features
 X_test_cat = X_test[["ocean_proximity"]]
-X_test_prepared = X_test_prepared.join(pd.get_dummies(X_test_cat, drop_first=True))
+X_test_prepared = X_test_prepared.join(
+    pd.get_dummies(X_test_cat, drop_first=True)
+)
 
 # Make final predictions and compute RMSE on the test set
-final_predictions = final_model.predict(X_test_prepared)
-final_mse = mean_squared_error(y_test, final_predictions)
+final_predictions = final_model.predict(
+    X_test_prepared
+)
+final_mse = mean_squared_error(
+    y_test, final_predictions
+)
 final_rmse = np.sqrt(final_mse)
