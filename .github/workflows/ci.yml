@@ -6,7 +6,7 @@ on:
       - feature/#6/ci-setup
   pull_request:
     branches:
-      - main
+      - feature/#6/ci-setup
 
 jobs:
   build:
