@@ -3,7 +3,6 @@ import tarfile
 
 import numpy as np
 import pandas as pd
-import yaml
 from scipy.stats import randint
 from six.moves import urllib
 from sklearn.ensemble import RandomForestRegressor
