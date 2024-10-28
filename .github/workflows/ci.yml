@@ -29,7 +29,7 @@ jobs:
         conda config --show  # Show current conda config
         - name: Run flake8
     -  run: |
-        conda activate myenv
+        conda activate mle_dev
         flake8 .
     - name: Run nonstandardcode.py
       run: python nonstandardcode.py  # Execute your Python script
