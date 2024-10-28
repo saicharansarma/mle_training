@@ -15,8 +15,8 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3  # Miniconda setup
       with:
         installer-url: https://github.com/conda-forge/miniforge/releases/download/4.8.3-2/Miniforge-pypy3-4.8.3-2-Linux-x86_64.sh  # Use custom installer URL from conda-forge
-        activate-environment: mle-dev  # Custom environment name
-        python-version: '3.9.20'  # Python version aligned with your environment
+        activate-environment: mle_dev  # Custom environment name
+        python-version: '3.12.4'  # Python version aligned with your environment
         environment-file: environment.yml  # Point to your environment file
         auto-activate-base: false  # Do not auto-activate base Conda environment
         allow-softlinks: true  # Allow softlinks
