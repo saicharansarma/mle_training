@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v0.2
+      uses: actions/checkoutv0.2
 
     - name: Set up Miniforge
       uses: conda-incubator/setup-miniconda@v2
