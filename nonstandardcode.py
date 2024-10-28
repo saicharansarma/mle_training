@@ -38,8 +38,6 @@ def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
 def load_housing_data(housing_path=HOUSING_PATH):
     csv_path = os.path.join(housing_path, "housing.csv")
     return pd.read_csv(csv_path)
-
-
 # Load housing data
 fetch_housing_data()
 housing = load_housing_data()
@@ -120,8 +118,6 @@ housing_predictions = tree_reg.predict(housing_prepared)
 tree_mse = mean_squared_error(housing_labels, housing_predictions)
 tree_rmse = np.sqrt(tree_mse)
 
-print("Decision Tree RMSE:", tree_rmse)
-
 # Random Forest Model with Randomized Search
 param_distribs = {
     "n_estimators": randint(low=1, high=200),
@@ -200,3 +196,4 @@ final_mse = mean_squared_error(y_test, final_predictions)
 final_rmse = np.sqrt(final_mse)
 
 print("Final RMSE on test set:", final_rmse)
+
