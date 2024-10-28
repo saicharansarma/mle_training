@@ -1,13 +1,6 @@
 name: CI
 
-on:
-  push:
-    branches:
-      - feature/#6/ci-setup
-  pull_request:
-    branches:
-      - feature/#6/ci-setup
-
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
