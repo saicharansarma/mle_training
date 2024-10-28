@@ -27,7 +27,6 @@ jobs:
         conda list  # List installed packages
         conda config --show-sources  # Show conda configuration sources
         conda config --show  # Show current conda config
-        - name: Run flake8
     -  run: |
         conda activate mle_dev
         flake8 .
