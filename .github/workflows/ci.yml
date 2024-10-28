@@ -27,7 +27,9 @@ jobs:
         conda list  # List installed packages
         conda config --show-sources  # Show conda configuration sources
         conda config --show  # Show current conda config
-    - name: Flake8 lint
-      uses: py-actions/flake8@v2  # Use pre-built GitHub Action for Flake8
+        - name: Run flake8
+    -  run: |
+        conda activate myenv
+        flake8 .
     - name: Run nonstandardcode.py
       run: python nonstandardcode.py  # Execute your Python script
