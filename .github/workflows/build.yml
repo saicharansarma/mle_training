@@ -1,0 +1,82 @@
+name: Build Package
+
+on:[push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+
+    - name: Install build tool
+      run: pip install --upgrade build
+
+    - name: Install tree tool
+      run: sudo apt-get install -y tree
+
+    - name: Show directory tree before build
+      run: tree
+
+    - name: Build the package
+      run: python -m build
+
+    - name: Show directory tree after build
+      run: tree
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: my-artifact
+        path: dist/
+        retention-days: 1
+
+    - name: List uploaded artifacts
+      run: ls dist/
+
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+        run:
+          shell: bash -el {0}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Miniforge
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        installer-url: https://github.com/conda-forge/miniforge/releases/download/4.8.3-2/Miniforge-pypy3-4.8.3-2-Linux-x86_64.sh  # Use custom installer URL from conda-forge
+        activate-environment: mle_dev  # Custom environment name
+        python-version: '3.12.4'  # Python version aligned with your environment
+        environment-file: environment.yml  # Point to your environment file
+        auto-activate-base: false  # Do not auto-activate base Conda environment
+        allow-softlinks: true  # Allow softlinks
+        show-channel-urls: true  # Show channel URLs
+      with:
+        python-version: 3.9
+        environment-file: env.yml
+        activate-environment: myenv
+
+    - name: Download build artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: my-artifact
+        path: dist
+
+    - name: Install the package
+      run: pip install dist/*.whl
+
+    - name: Run nonstandardcode.py
+      run: python -m mypackage.nonstandardcode
+
+
