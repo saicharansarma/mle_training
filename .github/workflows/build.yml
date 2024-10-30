@@ -72,6 +72,6 @@ jobs:
       run: pip install dist/*.whl
 
     - name: Run nonstandardcode.py
-      run: python -m mypackage.nonstandardcode
+      run: python  nonstandardcode.py
 
 
