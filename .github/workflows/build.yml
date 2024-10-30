@@ -62,11 +62,6 @@ jobs:
         auto-activate-base: false  # Do not auto-activate base Conda environment
         allow-softlinks: true  # Allow softlinks
         show-channel-urls: true  # Show channel URLs
-      with:
-        python-version: 3.9
-        environment-file: env.yml
-        activate-environment: myenv
-
     - name: Download build artifact
       uses: actions/download-artifact@v4
       with:
