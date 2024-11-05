@@ -1,7 +1,7 @@
 name: mle-dev
 dependencies:
   - python=3.12.4
-  - pip:
+  - pip
   - pip:
       - joblib==1.4.2
       - numpy==2.1.2
