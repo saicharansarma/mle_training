@@ -1,7 +1,13 @@
-# content of test_sample.py
-def func(x):
-    return x + 1
 
+from setuptools import setup, find_packages  # or find_namespace_packages
 
-def test_answer():
-    assert func(3) == 4
+setup(
+    # ...
+    packages=find_packages(
+        where='src',
+        include=['mypackage*'],
+        exclude=['mypackage.tests'],
+    ),
+    # ...
+)
+    
