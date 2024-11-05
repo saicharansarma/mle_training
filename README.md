@@ -4,3 +4,4 @@
 2) Then format the code using black(Black is an opinionated code formatter that automatically reformats your Python code to adhere to PEP 8.
 4) isort organizes your import statements according to PEP 8 guidelines
 5) flake8 checks your code for style violations, errors, and potential bugs. To use flake8:
+6) 
