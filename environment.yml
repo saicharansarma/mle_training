@@ -1,7 +1,6 @@
 name: mle-dev
 dependencies:
   - python=3.12.4
-  - pip
   - pip:
       - joblib==1.4.2
       - numpy==2.1.2
@@ -14,3 +13,4 @@ dependencies:
       - threadpoolctl==3.5.0
       - tzdata==2024.2
       - matplotlib==3.9.2
+      - pytest-8.3.3
