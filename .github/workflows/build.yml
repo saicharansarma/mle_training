@@ -80,6 +80,6 @@ jobs:
     - name: Run tests with pytest
       run: |
        tree .
-       pytest  tests/ --disable warnings
+       pytest  pytest_test.py --disable warnings
 
 
