@@ -23,6 +23,12 @@ jobs:
     - name: Install tree tool
       run: sudo apt-get install -y tree
 
+    - name: verify installed packages
+      run:  pip freeze 
+
+    - name: Install pytest
+      run: pip install pytest
+
     - name: Show directory tree before build
       run: tree
 
@@ -71,7 +77,9 @@ jobs:
     - name: Install the package
       run: pip install dist/*.whl
 
-    - name: Run nonstandardcode.py
-      run: python  nonstandardcode.py
+    - name: Run tests with pytest
+      run: |
+       tree .
+       pytest  tests/ --disable warnings
 
 
