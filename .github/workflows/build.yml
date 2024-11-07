@@ -78,6 +78,7 @@ jobs:
       run: pip install dist/*.whl
 
     - name: Run tests with pytest
-      run: pytest tests/unit_tests/test_packages.py
+      run: |
+       pytest tests/unit_tests/test_packages.py
 
 
