@@ -86,6 +86,6 @@ jobs:
 
     - name: Run tests with pytest
       run: |
-       pytest tests/unit_tests/test_packages.py
+       pytest tests/unit_tests/test_prediction.py
 
 
