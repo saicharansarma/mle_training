@@ -1,6 +1,13 @@
 name: Build Package
 
-on: [push]
+on:
+  push:
+    branches:
+      - fix/#14/refactor_code
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
