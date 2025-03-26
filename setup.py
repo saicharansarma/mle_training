@@ -1,13 +1,18 @@
-
-from setuptools import setup, find_packages  # or find_namespace_packages
+from setuptools import find_packages, setup
 
 setup(
-    # ...
-    packages=find_packages(
-        where='src',
-        include=['mypackage*'],
-        exclude=['mypackage.tests'],
-    ),
-    # ...
+    name="housingPricePrediction",
+    version="0.1",
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
+    install_requires=[
+        "numpy",
+        "pandas",
+        "scipy",
+        "scikit-learn",
+        "matplotlib",
+        "seaborn",
+        "six",
+        "flake8",
+    ],
 )
-    
