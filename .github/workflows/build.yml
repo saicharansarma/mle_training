@@ -1,67 +1,84 @@
 name: Build Package
 
-on:
-  push:
-
+on: [push]
 jobs:
   build:
-    name: Conda setup, build, install and run the package
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0}
 
     steps:
-    - name: Check out repository
+    - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Setup Miniconda
-      uses: conda-incubator/setup-miniconda@v3
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        conda-version: "24.11.2"
-        environment-file: environment.yml
-        activate-environment: mle_dev
+        python-version: 3.9
 
-    - name: Configure 'defaults' channel explicitly in Conda and activate environment
-      run: |
-        source $CONDA/etc/profile.d/conda.sh
-        conda config --add channels defaults
-        conda activate mle_dev
+    - name: Install build tool
+      run: pip install --upgrade build
 
-    - name: Install tree CLI tool
-      run: sudo apt-get install tree
+    - name: Install tree tool
+      run: sudo apt-get install -y tree
 
-    - name: Display directory tree before building
-      run: tree -d
+    - name: verify installed packages
+      run:  pip freeze 
 
-    - name: Build package
-      run: |
-        pip install build
-        python -m build .
-        echo "Building the package..."
+    - name: Install pytest
+      run: pip install pytest
 
-    - name: Display directory tree after building
-      run: tree -d
+    - name: Show directory tree before build
+      run: tree
+
+    - name: Build the package
+      run: python -m build
+
+    - name: Show directory tree after build
+      run: tree
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: build-artifacts
-        path: |
-          dist/*
-    
-    - name: Download build artifacts
+        name: my-artifact
+        path: dist/
+        retention-days: 1
+
+    - name: List uploaded artifacts
+      run: ls dist/
+
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+        run:
+          shell: bash -el {0}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Miniforge
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        installer-url: https://github.com/conda-forge/miniforge/releases/download/4.8.3-2/Miniforge-pypy3-4.8.3-2-Linux-x86_64.sh  # Use custom installer URL from conda-forge
+        activate-environment: mle_dev  # Custom environment name
+        python-version: '3.12.4'  # Python version aligned with your environment
+        environment-file: environment.yml  # Point to your environment file
+        auto-activate-base: false  # Do not auto-activate base Conda environment
+        allow-softlinks: true  # Allow softlinks
+        show-channel-urls: true  # Show channel URLs
+    - name: Download build artifact
       uses: actions/download-artifact@v4
       with:
-        name: build-artifacts
-        path: ./dist
+        name: my-artifact
+        path: dist
 
     - name: Install the package
-      run: |
-        source $CONDA/etc/profile.d/conda.sh
-        conda activate mle_dev
-        pip install ./dist/*.whl  
-
+      run: pip install dist/*.whl
+      
     - name: Run tests with pytest
       run: |
-        source $CONDA/etc/profile.d/conda.sh
         conda activate mle-dev
         pip install pytest
         pytest --disable-warnings -q
