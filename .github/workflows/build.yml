@@ -79,7 +79,7 @@ jobs:
       
     - name: Run tests with pytest
       run: |
-        conda activate mle-dev
+        conda activate mle_dev
         pip install pytest
         pytest --disable-warnings -q
         pytest tests/unit_tests/test_file.py
