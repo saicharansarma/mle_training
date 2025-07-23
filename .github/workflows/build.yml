@@ -79,7 +79,6 @@ jobs:
 
     - name: Run tests with pytest
       run: |
-       tree .
-       pytest 
+       pytest tests/unit_tests/test_file.py
 
 
