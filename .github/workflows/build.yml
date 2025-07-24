@@ -76,10 +76,10 @@ jobs:
 
     - name: Install the package
       run: pip install dist/*.whl
-
+      
     - name: Run tests with pytest
       run: |
-       tree .
-       pytest 
-
-
+        conda activate mle_dev
+        pip install pytest
+        pytest --disable-warnings -q
+        pytest tests/unit_tests/test_file.py
